@@ -10,7 +10,7 @@ const API_URL = `http://localhost:${process.env.PORT}`;
 describe('AUTH ROUTER', () => {
   beforeAll(server.start);
   afterAll(server.stop);
-  beforeEach(mockAuthAccount.pCleanAccountMocks);
+  beforeEach(mockAuthAccount.pCleanAuthAccountMocks);
 
   test('test if 404 is returned if any route is invalid', () => {
     return superagent.get(`${API_URL}/fake/route`)
