@@ -518,8 +518,12 @@ To use this in your code:
 * bcrypt
 * jsonwebtoken
 * crypto
+* aws sdk
+* fs-extra
+* multer
+* aws-sdk-mock
 
-See package.json for dependency details.
+** Please see package.json to confirm dependency details.
 
 ## Contributing
 
