@@ -10,7 +10,6 @@ const API_URL = `http://localhost:${process.env.PORT}/image/upload`;
 describe('testing route: /image/upload', () => {
   beforeAll(server.start);
   afterAll(server.stop);
-  //! Vinicio - please remember to clear picture mocks here as well now!
   beforeEach(authAccountMock.pCleanAuthAccountMocks);
 
   test('should respond with 200 status code and a picture', () => {
@@ -23,7 +22,6 @@ describe('testing route: /image/upload', () => {
       })
       .then((response) => {
         expect(response.status).toEqual(200);
-        //! Vinicio - HERE WE HAVE TO TEST A LOT MORE
       });
   });
 });
