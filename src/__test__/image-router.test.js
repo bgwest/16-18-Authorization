@@ -17,7 +17,7 @@ describe('testing route: /image/upload', () => {
       .then((mock) => {
         return superagent.post(API_URL)
           .set('Authorization', `Bearer ${mock.token}`)
-          .field('title', 'Sir Gregor, the mountain that purrs and BANANA')
+          .field('title', 'Sir Gregor')
           .attach('picture', `${__dirname}/assets/gregor.jpg`);
       })
       .then((response) => {
