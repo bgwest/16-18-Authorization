@@ -30,7 +30,7 @@ describe('testing route: /image/upload', () => {
   });
 
   // made to work in heroku... need help with testing duality issue here...
-  
+
   // test('test to ensure the object was deleted from s3 - should respond 204', () => {
   //   return imageMock.pCreateImageMock()
   //     .then((mock) => {
