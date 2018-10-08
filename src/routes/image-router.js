@@ -4,17 +4,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
 const multer = require('multer');
+const logger = require('../lib/logger');
+
+const jsonParser = bodyParser.json();
 
 const Image = require('../model/image-schema');
 const bearerAuthMiddleware = require('../lib/bearer-auth-middleware');
 
-const upload = multer({ dest: `${__dirname}/../temp/` });
+const upload = multer({ dest: `${__dirname}/../temp` });
 const s3 = require('../lib/s3');
 
 const router = module.exports = new express.Router();
 
 
-router.post('/image/upload', bearerAuthMiddleware, upload.any(), (request, response, next) => {
+router.post('/image/upload', bearerAuthMiddleware, upload.any(), jsonParser, (request, response, next) => {
   if (!request.account) {
     return next(new HttpError(400, 'bad request'));
   }
@@ -24,8 +27,13 @@ router.post('/image/upload', bearerAuthMiddleware, upload.any(), (request, respo
   }
   const file = request.files[0];
   const key = `${file.filename}.${file.originalname}`;
+  console.log(request.account._id);
+  console.log(request.body.title);
+  console.log(file);
+  console.log(key);
 
   return s3.pUpload(file.path, key)
+  // going to s3.pUpload to do it's thing and come back
     .then((s3URL) => {
       return new Image({
         title: request.body.title,
@@ -33,8 +41,38 @@ router.post('/image/upload', bearerAuthMiddleware, upload.any(), (request, respo
         account: request.account._id,
       }).save();
     })
-    .then(image => response.json(image))
+    .then((image) => {
+      logger.log(logger.INFO, 'Responding with 200');
+      return response.json(image);
+    })
     .catch(next);
+});
+
+
+router.delete('/image/upload/:id', bearerAuthMiddleware, (request, response, next) => {
+  if (!request.account) {
+    return next(new HttpError(400, 'bad request'));
+  }
+
+  const saveId = request.params.id; // aka the url
+  let saveUrl = null; // container for url
+
+  return Image.findById(saveId)
+    .then((image) => {
+      if (!image) {
+        logger.log(logger.INFO, 'Responding with a 404 status code');
+        return next(new HttpError(404, 'could not find image to delete'));
+      }
+      saveUrl = image.url;
+      return image.remove();
+    })
+    .then(() => {
+      return s3.pRemove(saveUrl.split('amazonaws.com/')[1]);
+    })
+    .then(() => {
+      return response.sendStatus(204);
+    })
+    .catch(error => next(error));
 });
 
 // router.get('/image/upload/:id', bearerAuthMiddleware, jsonParser, (request, response, next) => {
@@ -78,17 +116,3 @@ router.post('/image/upload', bearerAuthMiddleware, upload.any(), (request, respo
 //     .catch(next);
 // });
 //
-// router.delete('/image/upload/:id', bearerAuthMiddleware, jsonParser, (request, response, next) => {
-//   return Image.findById(request.params.id)
-//     .then((image) => {
-//       if (!image) {
-//         logger.log(logger.INFO, 'Responding with a 404 status code');
-//         return next(new HttpError(404, 'could not find image to delete'));
-//       }
-//       return image.remove();
-//     })
-//     .then(() => {
-//       return response.sendStatus(204);
-//     })
-//     .catch(error => next(error));
-// });
