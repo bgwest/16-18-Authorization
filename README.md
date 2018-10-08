@@ -1,14 +1,14 @@
 # 16: Basic Auth - app.js
 ##### restful HTTP server built with express, mongodb, mongoose, and basic auth
-[![Build Status](https://travis-ci.com/bgwest/16-18-Authorization.svg?branch=master)](https://travis-ci.com/bgwest/16-18-Authorization)
+[![Build Status](https://travis-ci.com/bgwest/16-18-Authorization.svg?branch=18-asset-management)](https://travis-ci.com/bgwest/16-18-Authorization)
 ## Current Features
 
 These methods currently exist for creating, changing, deleting, and getting user data. This latest release includes the ability to signup and login using basic auth http/jsonwebtokens.
 
-Updates to this API will continue to stream in as this project moves forward. Currently I am part 17 of 18.
+Updates to this API will continue to stream in as this project moves forward. Currently I am part 18 of 18.
 
 #####LATEST: 
-bearer auth middleware has been added and is being used on the new router image-router. this and all base CRUD features for image-router and is in preparation to start handling data.
+Now integrated AWS to save and remove images and leave https link in DB 
 
 ##### Note: 
 Using a database (mongodb) and ORM (mongoose) to perform the data processing, a new 'many' resource (schema) has been added called blog-post-schema.
@@ -426,6 +426,8 @@ X-Powered-By: Express
 * POST - 200 - test that the upload worked and a resource object is returned
 
 * DELETE - 204 - test to ensure the object was deleted from s3
+
+-- the test requested in assignment was to remove a file from amazon s3... but that cannot be done if I do not use real credentials... un-commeneted for now and deploy to heroku for demoing and testing as needed
 
 ### Installing
 
