@@ -48,7 +48,7 @@ function blogPostPreHook(done) {
 const blogPostPostHook = (document, done) => {
   return UserModel.findById(document.user)
     .then((userFound) => {
-      console.log(document);
+      // console.log(document);
       if (!userFound) {
         throw new HttpError(500, 'user not found');
       }

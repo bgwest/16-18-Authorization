@@ -8,7 +8,7 @@ const amazonS3 = new aws.S3();
 const s3 = {};
 
 s3.pUpload = (path, key) => {
-  console.log('inside s3.pUpload');
+  // console.log('inside s3.pUpload');
   const uploadOptions = {
     Bucket: process.env.AWS_BUCKET,
     Key: key,
@@ -16,7 +16,7 @@ s3.pUpload = (path, key) => {
     Body: fs.createReadStream(path),
   };
   // uncomment for debugging
-  console.log(uploadOptions);
+  // console.log(uploadOptions);
 
   return amazonS3.upload(uploadOptions)
     .promise()

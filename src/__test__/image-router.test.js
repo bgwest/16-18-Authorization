@@ -14,10 +14,10 @@ describe('testing route: /image/upload', () => {
   beforeEach(imageMock.pCleanImageMock);
 
   test('should respond with 200 status code and a picture', () => {
-    let mockCopy = null;
+    // let mockCopy = null;
     return authAccountMock.pCreateMock()
       .then((mock) => {
-        mockCopy = mock;
+        // mockCopy = mock;
         return superagent.post(API_URL)
           .set('Authorization', `Bearer ${mock.token}`)
           .field('title', 'Mr Gregor')
@@ -32,8 +32,8 @@ describe('testing route: /image/upload', () => {
   test('test to ensure the object was deleted from s3 - should respond 204', () => {
     return imageMock.pCreateImageMock()
       .then((mock) => {
-        let mockImageId = mock.image._doc._id.toString();
-        console.log(mockImageId);
+        const mockImageId = mock.image._doc._id.toString();
+        // console.log(mockImageId);
         return superagent.delete(`${API_URL}/${mockImageId}`)
           .set('Authorization', `Bearer ${mock.account.token}`);
       })
