@@ -86,7 +86,7 @@ describe('testing app.js routes and responses.', () => {
   test('attempting user creation and then deletion - successful delete should return 201', () => {
     return userMockObject.pCreateUserMock()
       .then((createdMockUser) => {
-        console.log(createdMockUser);
+        // console.log(createdMockUser);
         // development note: needed to slow down the return wait for db to create it
         setTimeout(() => {
           return superagent.delete(`http://localhost:${process.env.PORT}/login/${createdMockUser._id}`)

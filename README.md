@@ -1,14 +1,14 @@
 # 16: Basic Auth - app.js
 ##### restful HTTP server built with express, mongodb, mongoose, and basic auth
-[![Build Status](https://travis-ci.com/bgwest/16-18-Authorization.svg?branch=master)](https://travis-ci.com/bgwest/16-18-Authorization)
+[![Build Status](https://travis-ci.com/bgwest/16-18-Authorization.svg?branch=18-asset-management)](https://travis-ci.com/bgwest/16-18-Authorization)
 ## Current Features
 
 These methods currently exist for creating, changing, deleting, and getting user data. This latest release includes the ability to signup and login using basic auth http/jsonwebtokens.
 
-Updates to this API will continue to stream in as this project moves forward. Currently I am part 17 of 18.
+Updates to this API will continue to stream in as this project moves forward. Currently I am part 18 of 18.
 
 #####LATEST: 
-bearer auth middleware has been added and is being used on the new router image-router. this and all base CRUD features for image-router and is in preparation to start handling data.
+Now integrated AWS to save and remove images and leave https link in DB 
 
 ##### Note: 
 Using a database (mongodb) and ORM (mongoose) to perform the data processing, a new 'many' resource (schema) has been added called blog-post-schema.
@@ -55,7 +55,7 @@ npm run devDbOn
 npm run start-server
 ````
 
-## Image upload manual testing
+## NEW - Image upload manual testing
 
 *NOTE: make sure to create a bash variable for your token once you get it from a user signup. this will make your life easier and keep me from posting fake token over and over again.*
 
@@ -69,90 +69,37 @@ echo 'export token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlblNlZWQiOiI1ZDI0
 
 *i would also make sure to use single quotes when writing your export. it's not full proof with all special characters but majority single quotes will be your best bet, depending on the character combo. Either that or double with all \'s (escapes).*
 
+
 [x] upload image
 
 ```
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$ echo '{"title":"that NEW img","url":"http://new/img/yall"}' | http localhost:3000/image/upload "Authorization:Bearer $token"
+[1]Benjamins-MacBook-Pro:16-18-Authorization bwest$ . httpie-helper.sh upload
 HTTP/1.1 200 OK
 Connection: keep-alive
-Content-Length: 185
+Content-Length: 244
 Content-Type: application/json; charset=utf-8
-Date: Fri, 05 Oct 2018 05:45:46 GMT
-ETag: W/"b9-MW7YJqycpwCO1sZkBczICGb4nSY"
+Date: Mon, 08 Oct 2018 03:09:24 GMT
+ETag: W/"f4-5caRF7MCdTUlAXTwXvfMqjS8I2Y"
 X-Powered-By: Express
 
-{
-    "__v": 0,
-    "_id": "5bb6fa8ac6e7b16ad38ad11a",
-    "account": "5bb6dac334509563f693e12f",
-    "timestamp": "2018-10-05T05:45:46.698Z",
-    "title": "that NEW img",
-    "url": "http://new/img/yall"
-}
-
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$
+[1]Benjamins-MacBook-Pro:16-18-Authorization bwest$
 ```
 
-*NOTICE double quotes around Authorization:Bearer $token to ensure variable expansion. single quotes with escape does not work in this case.*
+##### NOTE: 
+* See app.js log for ID... could not get ID to return in response.json
 
-[x] get image
-```
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$ http :3000/image/upload/5bb6fa8ac6e7b16ad38ad11a "Authorization:Bearer $token"
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 185
-Content-Type: application/json; charset=utf-8
-Date: Fri, 05 Oct 2018 05:49:07 GMT
-ETag: W/"b9-MW7YJqycpwCO1sZkBczICGb4nSY"
-X-Powered-By: Express
-
-{
-    "__v": 0,
-    "_id": "5bb6fa8ac6e7b16ad38ad11a",
-    "account": "5bb6dac334509563f693e12f",
-    "timestamp": "2018-10-05T05:45:46.698Z",
-    "title": "that NEW img",
-    "url": "http://new/img/yall"
-}
-
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$
-```
-
-[x] put (update) image
-```
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$ echo '{"title":"brand new title"}' | http PUT :3000/image/upload/5bb6fa8ac6e7b16ad38ad11a "Authorization:Bearer $token"
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 155
-Content-Type: application/json; charset=utf-8
-Date: Fri, 05 Oct 2018 05:56:05 GMT
-ETag: W/"9b-adxIyu0hur8DTf4IFLLvGasYeP8"
-X-Powered-By: Express
-
-{
-    "__v": 0,
-    "_id": "5bb6fa8ac6e7b16ad38ad11a",
-    "account": "5bb6dac334509563f693e12f",
-    "timestamp": "2018-10-05T05:45:46.698Z",
-    "title": "brand new title",
-    "url": null
-}
-
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$
-```
+* NOTICE double quotes around Authorization:Bearer $token to ensure variable expansion. single quotes with escape does not work in this case.
 
 [x] delete image
 ```
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$ http DELETE :3000/image/upload/5bb6fa8ac6e7b16ad38ad11a "Authorization:Bearer $token"
+[1]Benjamins-MacBook-Pro:16-18-Authorization bwest$ . httpie-helper.sh delete 5bbaca64c7d7219aae1bdd7f
 HTTP/1.1 204 No Content
 Connection: keep-alive
-Date: Fri, 05 Oct 2018 06:20:37 GMT
+Date: Mon, 08 Oct 2018 03:11:37 GMT
 ETag: W/"a-bAsFyilMr4Ra1hIU5PyoyFRunpI"
 X-Powered-By: Express
 
-
-
-[0]Benjamins-MacBook-Pro:16-18-Authorization bwest$
+[1]Benjamins-MacBook-Pro:16-18-Authorization bwest$
 ```
 
 ## User Auth Account manual testing
@@ -476,25 +423,11 @@ X-Powered-By: Express
 
 #### image-router.js
 
-* 19: test - post request with a valid body and token should return 200
+* POST - 200 - test that the upload worked and a resource object is returned
 
-* 20: test - on post, if no token was provided, should return 401
+* DELETE - 204 - test to ensure the object was deleted from s3
 
-* 21: test - on post, if no body was provided or if the body was invalid should return 400
-
-* 22: GET - test 200, for a request made with a valid id
-
-* 23: GET - test 401, if no token was provided
-
-* 24: GET - test 404, for a valid request with an id that was not found
-
-* 25: PUT - test 200, for a post request with a valid body
-
-* 26: PUT - test 401, if no token was provided
-
-* 27: PUT - test 400, if the body was invalid
-
-* 28: PUT - test 404, for a valid request made with an id that was not found
+-- the test requested in assignment was to remove a file from amazon s3... but that cannot be done if I do not use real credentials... un-commeneted for now and deploy to heroku for demoing and testing as needed
 
 ### Installing
 
@@ -518,8 +451,12 @@ To use this in your code:
 * bcrypt
 * jsonwebtoken
 * crypto
+* aws sdk
+* fs-extra
+* multer
+* aws-sdk-mock
 
-See package.json for dependency details.
+** Please see package.json to confirm dependency details.
 
 ## Contributing
 
