@@ -44,6 +44,7 @@ router.post('/image/upload', bearerAuthMiddleware, upload.any(), jsonParser, (re
     })
     .then((image) => {
       logger.log(logger.INFO, 'Responding with 200');
+      console.log(image);
       return response.json(image);
     })
     .catch(next);
@@ -57,6 +58,7 @@ router.delete('/image/upload/:id', bearerAuthMiddleware, (request, response, nex
 
   const saveId = request.params.id; // aka the url
   let saveUrl = null; // container for url
+  let index = null; // get end of url array - aka the file name
 
   return Image.findById(saveId)
     .then((image) => {
@@ -65,10 +67,14 @@ router.delete('/image/upload/:id', bearerAuthMiddleware, (request, response, nex
         return next(new HttpError(404, 'could not find image to delete'));
       }
       saveUrl = image.url;
+      saveUrl = saveUrl.split('/');
+      index = saveUrl.length - 1;
+      console.log(saveUrl);
       return image.remove();
     })
     .then(() => {
-      return s3.pRemove(saveUrl.split('amazonaws.com/')[1]);
+      console.log(saveUrl);
+      return s3.pRemove(saveUrl[index]);
     })
     .then(() => {
       return response.sendStatus(204);

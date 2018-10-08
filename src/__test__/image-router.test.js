@@ -28,4 +28,17 @@ describe('testing route: /image/upload', () => {
         expect(response.body.url).toContain('http');
       });
   });
+
+  test('test to ensure the object was deleted from s3 - should respond 204', () => {
+    return imageMock.pCreateImageMock()
+      .then((mock) => {
+        let mockImageId = mock.image._doc._id.toString();
+        console.log(mockImageId);
+        return superagent.delete(`${API_URL}/${mockImageId}`)
+          .set('Authorization', `Bearer ${mock.account.token}`);
+      })
+      .then((response) => {
+        expect(response.status).toEqual(204);
+      });
+  });
 });

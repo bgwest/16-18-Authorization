@@ -16,7 +16,7 @@ s3.pUpload = (path, key) => {
     Body: fs.createReadStream(path),
   };
   // uncomment for debugging
-  // console.log(uploadOptions);
+  console.log(uploadOptions);
 
   return amazonS3.upload(uploadOptions)
     .promise()
