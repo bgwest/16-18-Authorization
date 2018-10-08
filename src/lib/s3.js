@@ -15,9 +15,8 @@ s3.pUpload = (path, key) => {
     ACL: 'public-read',
     Body: fs.createReadStream(path),
   };
-  // console.log(uploadOptions.Key);
-  console.log(uploadOptions);
-  // console.log(uploadOptions.Bucket);
+  // uncomment for debugging
+  // console.log(uploadOptions);
 
   return amazonS3.upload(uploadOptions)
     .promise()

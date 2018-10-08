@@ -3,7 +3,6 @@ temp/
 
 #ignore token file for fast command line testing with httpie
 .token
-auth-post.sh
 
 # ignore httpie .netrc basic auth header test file
 .netrc

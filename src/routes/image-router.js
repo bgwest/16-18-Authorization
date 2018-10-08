@@ -27,10 +27,11 @@ router.post('/image/upload', bearerAuthMiddleware, upload.any(), jsonParser, (re
   }
   const file = request.files[0];
   const key = `${file.filename}.${file.originalname}`;
-  console.log(request.account._id);
-  console.log(request.body.title);
-  console.log(file);
-  console.log(key);
+  // un-comment consoles for debugging
+  // console.log(request.account._id);
+  // console.log(request.body.title);
+  // console.log(file);
+  // console.log(key);
 
   return s3.pUpload(file.path, key)
   // going to s3.pUpload to do it's thing and come back
